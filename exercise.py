@@ -43,10 +43,14 @@ class Profiler:
         self.seq = sequence
 
     def check_subseq(self, subseq: str, i: int) -> bool:
-        if self.seq[i] == subseq[0] and self.seq[i+1] == subseq[1] and self.seq[i+2] == subseq[2] and self.seq[i+3] == subseq[3]:
-            return True
-        return False
-
+        if i + len(subseq) > len(self.seq):
+            return False
+    
+        for j in range(len(subseq)):
+            if subseq[j] != self.seq[i+j]:
+                return False
+        return True
+        
     def longest_run(self, subseq: str) -> int:
         """Return the longest number of repetitions of subseq in the encapsulated DNA sequence.
 
@@ -74,7 +78,7 @@ class Profiler:
                 counter += 1
                 if counter > max:
                     max = counter
-                i += 4
+                i += len(subseq)
             else:
                 counter = 0
                 i += 1
