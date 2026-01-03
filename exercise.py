@@ -42,6 +42,11 @@ class Profiler:
         """
         self.seq = sequence
 
+    def check_subseq(self, subseq: str, i: int) -> bool:
+        if self.seq[i] == subseq[0] and self.seq[i+1] == subseq[1] and self.seq[i+2] == subseq[2] and self.seq[i+3] == subseq[3]:
+            return True
+        return False
+
     def longest_run(self, subseq: str) -> int:
         """Return the longest number of repetitions of subseq in the encapsulated DNA sequence.
 
@@ -60,7 +65,21 @@ class Profiler:
         >>> p.longest_run('TATC')
         5
         """
-        return -1
+        i: int = 0
+        counter: int = 0
+        max: int = 0
+
+        while i < len(self.seq)-3:
+            if self.check_subseq(subseq, i):
+                counter += 1
+                if counter > max:
+                    max = counter
+                i += 4
+            else:
+                counter = 0
+                i += 1
+
+        return max
 
     def match_suspect(self,
                       suspect_name: str,
@@ -73,4 +92,12 @@ class Profiler:
         >>> p.match_suspect('Abel', {'AGAT':3, 'AATG':7, 'TATC':4})
         False
         """
-        pass
+        flag: bool = True
+
+        for subseq in dna_fpr:
+            if dna_fpr[subseq] == self.longest_run(subseq):
+                continue
+            else:
+                flag = False
+        
+        return flag
